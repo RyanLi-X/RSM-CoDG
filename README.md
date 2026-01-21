@@ -12,8 +12,6 @@ Training follows leave-one-subject-out: each fold holds one subject out for test
 
 ## Project Layout
 - `main.py` — CLI entry, experiment setup, LOSO loop.
-- `train.py` — training routine, logging, early stopping, checkpointing.
-- `test.py` — evaluation utilities.
 - `model.py` — RGRM, MSTT, CoDG, and model wrappers.
 - `preprocess.py` — SEED-III data loading and windowing utilities.
 - `GradientReverseLayer.py`, `event.py` — auxiliary components/utilities.
@@ -72,3 +70,4 @@ During training each fold is evaluated on the held-out subject every epoch; best
 
 ## Citation
 If you use RSM-CoDG in your research, please cite the corresponding paper (add once available).
+
