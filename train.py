@@ -63,11 +63,9 @@ def train_rsm_codg(data_loader_dict, optimizer_config, cuda, args, iteration, wr
         total_loss = 0
         total_cls_loss = 0
         total_dg_losses = {
-            'attention_sparsity': 0,
             'feature_orthogonal': 0,
             'attention_contrastive': 0,
-            'feature_mmd': 0,
-            'feature_consistency': 0
+            'feature_mmd': 0
         }
         total_correct = 0
         total_samples = 0
@@ -76,11 +74,9 @@ def train_rsm_codg(data_loader_dict, optimizer_config, cuda, args, iteration, wr
             epoch_loss = 0
             epoch_cls_loss = 0
             epoch_dg_losses = {
-                'attention_sparsity': 0,
                 'feature_orthogonal': 0,
                 'attention_contrastive': 0,
-                'feature_mmd': 0,
-                'feature_consistency': 0
+                'feature_mmd': 0
             }
             epoch_correct = 0
             epoch_samples = 0

@@ -49,16 +49,12 @@ if __name__ == '__main__':
     parser.add_argument("--dropout_rate", type=float, default=0.4, help="dropout rate")
     
     # DG loss weights
-    parser.add_argument("--weight_attention_sparsity", type=float, default=0.1, 
-                       help="weight for attention sparsity loss")
-    parser.add_argument("--weight_feature_orthogonal", type=float, default=0.05, 
+    parser.add_argument("--weight_feature_orthogonal", type=float, default=0.2, 
                        help="weight for feature orthogonal loss")
     parser.add_argument("--weight_attention_contrastive", type=float, default=0.2, 
                        help="weight for attention contrastive loss")
-    parser.add_argument("--weight_feature_mmd", type=float, default=0.15, 
+    parser.add_argument("--weight_feature_mmd", type=float, default=0.2, 
                        help="weight for feature MMD loss")
-    parser.add_argument("--weight_feature_consistency", type=float, default=0.1, 
-                       help="weight for feature consistency loss")
     
     # DG schedule
     parser.add_argument("--dg_warmup_epochs", type=int, default=50, 
@@ -92,11 +88,9 @@ if __name__ == '__main__':
 
     # Build DG weight dict
     args.dg_loss_weights = {
-        'attention_sparsity': args.weight_attention_sparsity,
         'feature_orthogonal': args.weight_feature_orthogonal,
         'attention_contrastive': args.weight_attention_contrastive,
-        'feature_mmd': args.weight_feature_mmd,
-        'feature_consistency': args.weight_feature_consistency
+        'feature_mmd': args.weight_feature_mmd
     }
 
     # Leave-one-subject-out

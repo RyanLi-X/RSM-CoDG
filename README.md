@@ -6,7 +6,7 @@
 RSM-CoDG is an EEG emotion recognition pipeline exemplified on the SEED-III (seed3) dataset, and can be adapted to other datasets with the same 62-channel, 5-band DE-format. It combines:
 - A region-aware graph module (RGRM) to model spatial structure across 62 EEG channels and 5 frequency bands.
 - A multi-scale temporal transformer (MSTT) for local and sparse global temporal attention.
-- A collaborative domain generalization head (CoDG) with complementary losses (attention sparsity, feature orthogonality, attention contrastive, MMD, class consistency) to improve cross-subject transfer.
+- A collaborative domain generalization head (CoDG) with three complementary losses (attention contrastive, feature orthogonality, MMD) to improve cross-subject transfer.
 
 Training follows leave-one-subject-out: each fold holds one subject out for testing while the remaining subjects are sources. TensorBoard logs and checkpoints are saved per fold.
 
@@ -60,7 +60,7 @@ python main.py \
 Key flags:
 - `--way`, `--index`: tag TensorBoard and checkpoint folders.
 - `--dg_warmup_epochs`, `--dg_max_weight`: schedule DG losses.
-- `--weight_*`: weights for the five DG losses.
+- `--weight_feature_orthogonal`, `--weight_attention_contrastive`, `--weight_feature_mmd`: weights for the three DG losses.
 - `--patience`: early stopping patience.
 
 Outputs:

@@ -350,9 +350,6 @@ class CollaborativeDomainGeneralization(nn.Module):
         # Orthogonal projector for feature decoupling
         self.orthogonal_projector = nn.Linear(feature_dim, feature_dim, bias=False)
         
-        # Sparsity controller
-        self.sparsity_controller = nn.Parameter(torch.tensor(1.0))
-        
     def compute_contrastive_loss(self, attention_emb, subject_ids):
         """InfoNCE-based attention contrastive loss for subject consistency."""
         attention_emb_norm = F.normalize(attention_emb, dim=1)
@@ -397,34 +394,6 @@ class CollaborativeDomainGeneralization(nn.Module):
         
         return mmd_loss / max(count, 1)
     
-    def compute_feature_consistency_loss(self, features, labels):
-        """Cross-subject feature consistency loss (class-wise)."""
-        consistency_loss = 0.0
-        unique_labels = torch.unique(labels)
-        
-        for label in unique_labels:
-            mask = (labels == label)
-            if torch.sum(mask) > 1:
-                label_features = features[mask]
-                # Use a stable variance estimate
-                feature_mean = label_features.mean(dim=0)
-                feature_var = ((label_features - feature_mean) ** 2).mean()
-                consistency_loss += feature_var
-        
-        return consistency_loss / len(unique_labels) if len(unique_labels) > 0 else torch.tensor(0.0, device=features.device)
-    
-    def compute_attention_sparsity_loss(self, attention_weights):
-        """Attention sparsity loss using Gini coefficient."""
-        sorted_weights, _ = torch.sort(attention_weights, dim=1, descending=True)
-        n = sorted_weights.size(1)
-        index = torch.arange(1, n + 1, device=attention_weights.device).float()
-        gini = (2 * (sorted_weights * index.unsqueeze(0)).sum(dim=1)) / (n * sorted_weights.sum(dim=1)) - (n + 1) / n
-        
-        # Encourage partial sparsity
-        target_gini = 0.3
-        sparsity_loss = F.mse_loss(gini, torch.full_like(gini, target_gini))
-        
-        return sparsity_loss * torch.sigmoid(self.sparsity_controller)
     
     def compute_orthogonal_loss(self, features):
         """Orthogonality loss to keep feature dimensions independent."""
@@ -465,23 +434,16 @@ class CollaborativeDomainGeneralization(nn.Module):
         # 4. Compute DG losses
         losses = {}
         if self.training:
-            # Attention sparsity
-            attention_sparse_loss = self.compute_attention_sparsity_loss(temporal_attention_weights)
-            losses['attention_sparsity'] = attention_sparse_loss
             # Feature orthogonality
             orthogonal_loss = self.compute_orthogonal_loss(orthogonal_features)
             losses['feature_orthogonal'] = orthogonal_loss
             if subject_ids is not None:
-                # Subject-level contrastive loss
+                # Subject-level contrastive loss on attention embeddings
                 contrastive_loss = self.compute_contrastive_loss(attention_fusion, subject_ids)
                 losses['attention_contrastive'] = contrastive_loss
                 # MMD domain alignment
                 mmd_loss = self.compute_mmd_loss(orthogonal_features, subject_ids)
                 losses['feature_mmd'] = mmd_loss
-            if labels is not None:
-                # Class-wise consistency
-                feature_consistency_loss = self.compute_feature_consistency_loss(orthogonal_features, labels)
-                losses['feature_consistency'] = feature_consistency_loss
         
         return orthogonal_features, losses
 
@@ -585,11 +547,9 @@ def calculate_total_loss(cls_loss, dg_losses, loss_weights=None):
     """
     if loss_weights is None:
         loss_weights = {
-            'attention_sparsity': 0.1,
             'feature_orthogonal': 0.05,
             'attention_contrastive': 0.2,
-            'feature_mmd': 0.15,
-            'feature_consistency': 0.1
+            'feature_mmd': 0.15
         }
     
     total_loss = cls_loss
