@@ -3,7 +3,7 @@
 ![RSM-CoDG](RSM-CoDG.png)
 
 ## Overview
-RSM-CoDG is an EEG emotion recognition pipeline for the SEED-III (seed3) dataset. It combines:
+RSM-CoDG is an EEG emotion recognition pipeline exemplified on the SEED-III (seed3) dataset, and can be adapted to other datasets with the same 62-channel, 5-band DE-format. It combines:
 - A region-aware graph module (RGRM) to model spatial structure across 62 EEG channels and 5 frequency bands.
 - A multi-scale temporal transformer (MSTT) for local and sparse global temporal attention.
 - A collaborative domain generalization head (CoDG) with complementary losses (attention sparsity, feature orthogonality, attention contrastive, MMD, class consistency) to improve cross-subject transfer.
@@ -31,8 +31,8 @@ pip install torch torchvision torchaudio --extra-index-url https://download.pyto
 pip install numpy scipy scikit-learn tensorboard
 ```
 
-## Data Preparation (seed3 only)
-1. Set `--seed3_path` to the root directory containing SEED-III DE features and labels.
+## Data Preparation (seed3 example)
+1. Set `--seed3_path` to the root directory containing SEED-III DE features and labels. For other datasets, point the path flags to your data root and provide matching label/layout conventions.
 2. Expected structure:
 ```
 <seed3_path>/
@@ -45,7 +45,7 @@ pip install numpy scipy scikit-learn tensorboard
 - Each `.mat` under a session contains keys starting with `de_LDS*` (62 channels × 5 bands × time). `label.mat` holds session labels.
 
 ## Running Training (LOSO)
-Example (session 1, batch 512, default hyperparameters):
+Example with seed3 (session 1, batch 512, default hyperparameters):
 ```bash
 python main.py \
   --dataset_name seed3 \
