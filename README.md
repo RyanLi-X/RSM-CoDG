@@ -1,4 +1,4 @@
-# RSM-CoDG: Region-aware Spatiotemporal Modeling with Collaborative DG
+# RSM-CoDG：Region-aware Spatiotemporal Modeling with Collaborative Domain Generalization for Cross-Subject EEG Emotion Recognition
 
 ![RSM-CoDG](RSM-CoDG.png)
 
@@ -70,4 +70,5 @@ During training each fold is evaluated on the held-out subject every epoch; best
 
 ## Citation
 If you use RSM-CoDG in your research, please cite the corresponding paper (add once available).
+
 
