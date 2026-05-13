@@ -69,6 +69,12 @@ Outputs:
 During training each fold is evaluated on the held-out subject every epoch; best checkpoints per fold are stored. For standalone testing of a saved model, use the helpers in `test.py` (e.g., `test_rsm_codg`).
 
 ## Citation
-If you use RSM-CoDG in your research, please cite the corresponding paper (add once available).
-
-
+If you use RSM-CoDG in your research, please cite the corresponding paper
+```bash
+@article{wu2026region,
+  title={Region-aware Spatiotemporal Modeling with Collaborative Domain Generalization for Cross-Subject EEG Emotion Recognition},
+  author={Wu, Weiwei and Li, Yueyang and Shi, Yuhu and Zeng, Weiming and Qin, Lang and Yang, Yang and Zhou, Ke and Zhang, Zhiguo and Siok, Wai Ting and Wang, Nizhuan},
+  journal={arXiv preprint arXiv:2601.15615},
+  year={2026}
+}
+```
